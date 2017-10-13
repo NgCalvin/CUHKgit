@@ -1,3 +1,6 @@
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.*;
 
 public class FrequentItem 
@@ -9,12 +12,24 @@ public class FrequentItem
 	
 	public static void main(String[] args)
 	{
+		PrintStream out;
+		try 
+		{
+			out = new PrintStream(new FileOutputStream("B.txt"));
+			System.setOut(out);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		generateFactor();
 		//gentest(buckets);
 		pass1(buckets,20);
 		generatePair(item);
 		//genPairTest(count2);
 		pass2(buckets,20);
+		
+		
 	}
 
 	
@@ -149,7 +164,7 @@ public class FrequentItem
 			}
 		}
 		
-		//System.out.println("The following are the frequent pairs of over " + support + " supports!");
+		System.out.println("The following are the frequent pairs of over " + support + " supports!");
 		for(int i = 0 ; i < 2000 ; i++)
 		{
 			if(count2[i][2]>=20)
@@ -170,10 +185,10 @@ public class FrequentItem
 		for(int j = 0 ; j < tempItemList.size() ; j++)
 		{
 			item[j] = tempItemList.get(j);
-			System.out.println(item[j]);
+			System.out.print(item[j]+",");
 		}
-		
-		System.out.println("Total number of pair  with over 20 support is " + tempItemList.size());
+		System.out.println("");
+		System.out.println("Total number of unique items that in pair with over 20 support is " + tempItemList.size());
 	}
 	
 	public static int contain2(int[][] buckets,int[] tuple)

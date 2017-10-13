@@ -23,12 +23,26 @@ public class DGIM
 	public static void main(String[] args)
 	{
 		sum = 0;
-		
 		Scanner sr = null;
 		int next;
 		String bitString;
 		try
 		{
+//			PrintStream out = new PrintStream(new FileOutputStream("D.txt"));
+//			System.setOut(out);
+			
+			System.out.println("The result is printed out in 3 lines.");
+			System.out.println("First line is the bit inside our 100 bit sliding window");
+			System.out.println("Second line is timestamp for that bit.");
+			System.out.println("Third line is bucket index. Starting from 2 first 2 is start of bucket1 and second 2 is end of bucket1.");
+			System.out.println("**In Eclipse, the result is printed out nicely....not like in txt one row become 3 rows...");
+//			System.out.println("");
+			System.out.println("************************************************************************************");
+			System.out.println("");
+//			System.out.println("Now, Here will show the process of stream c0! ");
+//			System.out.println("Showing other stream also will be huge so....");
+//			System.out.println("************************************************************************************");
+
 			sr = new Scanner(new File("src/cmsc5741_stream_data.txt"));
 			
 			while(sr.hasNext())
@@ -41,6 +55,7 @@ public class DGIM
 				{
 					assignBit(bitString);
 					counter++;
+//					printResult(c0);
 				}
 				else
 				{
@@ -63,6 +78,7 @@ public class DGIM
 					updateBucket(c7,Integer.parseInt(bitString.substring(2,3)));
 					updateBucket(c8,Integer.parseInt(bitString.substring(1,2)));
 					updateBucket(c9,Integer.parseInt(bitString.substring(0,1)));
+					
 				}
 			}
 			
@@ -255,23 +271,24 @@ public class DGIM
 				ci[1][100] = timeStamp;
 				ci[2][100] = 1;
 				
-				//System.out.println("Merging bucket 1!");
+//				System.out.println("Looking at number of bucket 1!");
 				//For merging bucket 1
 				for(int k = 100 ; k >= 0 ; k--)
 				{
 					if(ci[2][k] == 1)
 					{
 						slot.add(k);
-						//System.out.println("Adding " + k + " to arraylist for merging!");
+//						System.out.println("Adding slot " + k + " to arraylist for merging!");
 					}
 					
 					if(slot.size()==3)
 					{
-						//System.out.println("Found 3 buckets of 1!");
+//						System.out.println("Found 3 buckets of 1!");
 						if(ci[1][slot.get(0)] > ci[1][slot.get(1)] && ci[1][slot.get(0)] > ci[1][slot.get(2)])
 						{
 							ci[2][slot.get(1)] = 2;
 							ci[2][slot.get(2)] = 2;
+//							System.out.println("Compared timestamp and now merge 2 buckets of 1 into a bucket of 2!");
 						}
 						slot.clear();
 						break;
@@ -284,14 +301,14 @@ public class DGIM
 				//For merging bucket 2 to 32.
 				for(int i = 1 ; i < 5 ; i++)
 				{
-					//System.out.println("Checking for bucket " + (int) Math.pow((double) 2, (double) i));
+//					System.out.println("Checking for bucket " + (int) Math.pow((double) 2, (double) i));
 					
 					for(int j = 100 ; j >= 0 ; j--)
 					{
 						if(ci[2][j] == (int) Math.pow((double) 2, (double) i))
 						{
 							slot.add(j);
-							//System.out.println("Adding " + j + " to arraylist for merging!");
+//							System.out.println("Adding " + j + " to arraylist for merging!");
 						}
 						
 						if(slot.size() == 5 && j == 0)
@@ -301,14 +318,14 @@ public class DGIM
 							boolean check3 = ci[1][slot.get(2)]>ci[1][slot.get(3)];
 							boolean check4 = ci[1][slot.get(3)]>ci[1][slot.get(4)];
 							
-							//System.out.println("Found 5 buckets of size " + (int) Math.pow((double) 2, (double) i));
+//							System.out.println("Found 3 buckets of size " + (int) Math.pow((double) 2, (double) i));
 							if(check1&&check2&&check3&&check4)	
 							{
 								ci[2][slot.get(2)] = (int) Math.pow((double) 2, (double) (i+1));
 								ci[2][slot.get(3)] = 0;
 								ci[2][slot.get(4)] = 0;
 							}
-							//System.out.println("Clearing Slot arraylist!");
+//							System.out.println("Clearing Slot arraylist!");
 							slot.clear();
 							break;
 						}
@@ -321,7 +338,7 @@ public class DGIM
 							boolean check4 = ci[1][slot.get(3)]>ci[1][slot.get(4)];
 							boolean check5 = ci[1][slot.get(4)]>ci[1][slot.get(5)];
 
-							//System.out.println("Found 6 buckets of size " + (int) Math.pow((double) 2, (double) i));
+//							System.out.println("Found 3 buckets of size " + (int) Math.pow((double) 2, (double) i));
 							if(check1&&check2&&check3&&check4&&check5)	
 							{
 								ci[2][slot.get(2)] = (int) Math.pow((double) 2, (double) (i+1));
@@ -329,12 +346,12 @@ public class DGIM
 								ci[2][slot.get(4)] = 0;
 								ci[2][slot.get(5)] = (int) Math.pow((double) 2, (double) (i+1));
 							}
-							//System.out.println("Clearing Slot arraylist!");
+//							System.out.println("Clearing Slot arraylist!");
 							slot.clear();
 							break;
 						}
 					}
-					//System.out.println("Clearing Slot arraylist!");
+//					System.out.println("Clearing Slot arraylist!");
 					slot.clear();
 				}
 				slot.clear();
@@ -366,21 +383,22 @@ public class DGIM
 			{
 				ci[2][counter] = 1;
 				
-				//System.out.println("Merging bucket 1!");
+//				System.out.println("Checking for number of bucket 1!");
 				//For merging bucket 1
 				for(int k = counter ; k >= 0 ; k--)
 				{
 					if(ci[2][k] == 1)
 					{
 						slot.add(k);
-						//System.out.println("Adding " + k + " to arraylist for merging!");
+//						System.out.println("Adding slot " + k + " to arraylist for merging!");
 					}
 					
 					if(slot.size()==3)
 					{
-						//System.out.println("Found 3 buckets of 1!");
+//						System.out.println("Found 3 buckets of 1!");
 						if(ci[1][slot.get(0)] > ci[1][slot.get(1)] && ci[1][slot.get(0)] > ci[1][slot.get(2)])
 						{
+//							System.out.println("Merging 2 buckets of 1 into 1 bucket of 2!");
 							ci[2][slot.get(1)] = 2;
 							ci[2][slot.get(2)] = 2;
 						}
@@ -395,14 +413,14 @@ public class DGIM
 				//For merging bucket 2 to 32.
 				for(int i = 1 ; i < 5 ; i++)
 				{
-					//System.out.println("Checking for bucket " + (int) Math.pow((double) 2, (double) i));
+//					System.out.println("Checking for bucket " + (int) Math.pow((double) 2, (double) i));
 					
 					for(int j = counter ; j >= 0 ; j--)
 					{
 						if(ci[2][j] == (int) Math.pow((double) 2, (double) i))
 						{
 							slot.add(j);
-							//System.out.println("Adding " + j + " to arraylist for merging!");
+//							System.out.println("Adding " + j + " to arraylist for merging!");
 						}
 						
 						if(slot.size() == 5 && j == 0)
@@ -412,14 +430,14 @@ public class DGIM
 							boolean check3 = ci[1][slot.get(2)]>ci[1][slot.get(3)];
 							boolean check4 = ci[1][slot.get(3)]>ci[1][slot.get(4)];
 							
-							//System.out.println("Found 5 buckets of size " + (int) Math.pow((double) 2, (double) i));
+//							System.out.println("Found 3 buckets of size " + (int) Math.pow((double) 2, (double) i));
 							if(check1&&check2&&check3&&check4)	
 							{
 								ci[2][slot.get(2)] = (int) Math.pow((double) 2, (double) (i+1));
 								ci[2][slot.get(3)] = 0;
 								ci[2][slot.get(4)] = 0;
 							}
-							//System.out.println("Clearing Slot arraylist!");
+//							System.out.println("Clearing Slot arraylist!");
 							slot.clear();
 							break;
 						}
@@ -432,7 +450,7 @@ public class DGIM
 							boolean check4 = ci[1][slot.get(3)]>ci[1][slot.get(4)];
 							boolean check5 = ci[1][slot.get(4)]>ci[1][slot.get(5)];
 
-							//System.out.println("Found 6 buckets of size " + (int) Math.pow((double) 2, (double) i));
+//							System.out.println("Found 3 buckets of size " + (int) Math.pow((double) 2, (double) i));
 							if(check1&&check2&&check3&&check4&&check5)	
 							{
 								ci[2][slot.get(2)] = (int) Math.pow((double) 2, (double) (i+1));
@@ -440,12 +458,12 @@ public class DGIM
 								ci[2][slot.get(4)] = 0;
 								ci[2][slot.get(5)] = (int) Math.pow((double) 2, (double) (i+1));
 							}
-							//System.out.println("Clearing Slot arraylist!");
+//							System.out.println("Clearing Slot arraylist!");
 							slot.clear();
 							break;
 						}
 					}
-					//System.out.println("Clearing Slot arraylist!");
+//					System.out.println("Clearing Slot arraylist!");
 					slot.clear();
 				}
 				slot.clear();
