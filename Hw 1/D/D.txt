@@ -1,7 +1,7 @@
 The result is printed out in 3 lines.
 First line is the bit inside our 100 bit sliding window
 Second line is timestamp for that bit.
-Third line is bucket index. Starting from 2 first 2 is start of bucket1 and second 2 is end of bucket1.
+Third line is bucket index. Starting from bucket of size 2, first 2 is start of bucket1 and second 2 is end of bucket1 and so on.
 **In Eclipse, the result is printed out nicely....not like in txt one row become 3 rows...
 ************************************************************************************
 

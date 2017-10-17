@@ -6,13 +6,18 @@ import java.util.*;
 public class FrequentItem 
 {
 	static int[][] buckets = new int[1001][101];
+	static ArrayList<ArrayList<Integer>> buckets2 = new ArrayList<ArrayList<Integer>>();
 	static int[] count1 = new int[1001];
 	static int[][] count2 = new int[2000][3];
 	static int[] item = new int[70];
+	static ArrayList<ArrayList<Integer>> triplet = new ArrayList<ArrayList<Integer>>();
+	static ArrayList<ArrayList<Integer>> count3 = new ArrayList<ArrayList<Integer>>();
+	static ArrayList<ArrayList<Integer>> quadruple = new ArrayList<ArrayList<Integer>>();
+	static ArrayList<ArrayList<Integer>> count4 = new ArrayList<ArrayList<Integer>>();
 	
 	public static void main(String[] args)
 	{
-		PrintStream out;
+/*		PrintStream out;
 		try 
 		{
 			out = new PrintStream(new FileOutputStream("B.txt"));
@@ -21,20 +26,29 @@ public class FrequentItem
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+*/
 		generateFactor();
 		//gentest(buckets);
 		pass1(buckets,20);
 		generatePair(item);
 		//genPairTest(count2);
 		pass2(buckets,20);
+		generateTriplet(count2);
+//		System.out.println(triplet);
+		pass3(buckets2,20);
+		System.out.println("");
+		System.out.println("Here's the triplet with their respected count! [element 1, element 2, element 3 , count]");
+		System.out.println(count3);
 		
+		generateQuadruple(triplet);
+		System.out.println(quadruple);
 		
 	}
 
 	
 	public static void generateFactor()
 	{
+		ArrayList<Integer> temp = new ArrayList<Integer>();
 		for(int b = 1 ; b < 1001 ; b++)
 		{
 			int j = 0;
@@ -47,9 +61,14 @@ public class FrequentItem
 					//System.out.println(b%i);
 					buckets[b][j] = i;
 					j++;
+					temp.add(i);
 				}
 			}
+			buckets2.add(new ArrayList<Integer>(temp));
+			temp.clear();
 		}
+		
+		
 	}
 	
 	public static void gentest(int[][] item)
@@ -180,15 +199,6 @@ public class FrequentItem
 				System.out.print("(" + count2[i][0] + "," + count2[i][1] + ")" );
 			}
 		}
-		System.out.println();
-		System.out.println("Itemset of 2 elements with over " + support + " support are : ");
-		for(int j = 0 ; j < tempItemList.size() ; j++)
-		{
-			item[j] = tempItemList.get(j);
-			System.out.print(item[j]+",");
-		}
-		System.out.println("");
-		System.out.println("Total number of unique items that in pair with over 20 support is " + tempItemList.size());
 	}
 	
 	public static int contain2(int[][] buckets,int[] tuple)
@@ -240,4 +250,106 @@ public class FrequentItem
 		//System.out.println(count);
 		return count;
 	}
+
+	public static void generateTriplet(int[][] count2)
+	{
+		ArrayList<Integer> temp = new ArrayList<Integer>();
+		ArrayList<ArrayList<Integer>> tempCount2 = new ArrayList<ArrayList<Integer>>();
+		
+		for(int i = 0 ; i < 2000 ; i++)
+		{
+			if(count2[i][2]>=20)
+			{
+				temp.add(count2[i][0]);
+				temp.add(count2[i][1]);
+				
+//				System.out.println(temp);
+				tempCount2.add(new ArrayList<Integer>(temp));
+				temp.clear();
+			}
+		}
+		
+//		System.out.println(tempCount2);
+//		System.out.println(tempCount2.size());
+		
+		for(int j = 0 ; j < tempCount2.size() ; j++)
+		{
+			for(int k = j + 1 ; k < tempCount2.size() ; k++)
+			{
+//				System.out.println(k);
+				if(tempCount2.get(j).get(0) == tempCount2.get(k).get(0))
+				{
+					temp.addAll(tempCount2.get(j));
+					temp.add(tempCount2.get(k).get(1));
+					triplet.add(new ArrayList<Integer>(temp));
+					temp.clear();
+				}
+				else if(tempCount2.get(j).get(0) < tempCount2.get(k).get(0))
+				{
+					break;
+				}
+			}
+		}
+		
+	}
+
+	public static int contain3(ArrayList<ArrayList<Integer>> buckets2,ArrayList<Integer> triplet)
+	{
+		int count = 0;
+		for( int i = 0; i < buckets2.size() ; i++)
+		{
+			if(buckets2.get(i).containsAll(triplet))
+			{
+				count++;
+			}
+		}
+		return count;
+	}
+
+	public static void pass3(ArrayList<ArrayList<Integer>> buckets2, int support)
+	{
+		ArrayList<Integer> temp = new ArrayList<Integer>();
+		
+		for(int i = 0 ; i < triplet.size() ; i++)
+		{
+			temp = triplet.get(i);
+			temp.add(contain3(buckets2,temp));
+			triplet.set(i, new ArrayList<Integer>(temp));
+			temp.clear();
+		}
+		
+		for(int i = 0 ; i < triplet.size() ; i++)
+		{
+			if(triplet.get(i).get(3) >= support)
+			{
+				count3.add(triplet.get(i));
+			}
+		}
+	}
+
+	public static void generateQuadruple(ArrayList<ArrayList<Integer>> triplet)
+	{
+		ArrayList<Integer> temp = new ArrayList<Integer>();
+		
+		for(int i = 0 ; i < triplet.size() ; i++)
+		{
+			for(int k = i + 1 ; k < triplet.size() ; k++)
+			{
+//				System.out.println(k);
+				if(triplet.get(i).get(0) == triplet.get(i+1).get(0) && triplet.get(i).get(1) == triplet.get(i).get(1))
+				{
+					temp.addAll(triplet.get(i));
+					temp.add(triplet.get(k).get(2));
+					quadruple.add(new ArrayList<Integer>(temp));
+					temp.clear();
+				}
+				else if(triplet.get(i).get(0) < triplet.get(k).get(0))
+				{
+					break;
+				}
+			}
+		}
+		
+	}
+
 }
